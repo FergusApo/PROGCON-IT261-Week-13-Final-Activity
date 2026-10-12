@@ -1,99 +1,170 @@
-def checkWinner(board):
-    result = "None"
-    filledCount = 0
-    
-    # Check rows
-    if board[1] != " " and board[1] == board[2] and board[2] == board[3]:
-        result = board[1]
-    if board[4] != " " and board[4] == board[5] and board[5] == board[6]:
-        result = board[4]
-    if board[7] != " " and board[7] == board[8] and board[8] == board[9]:
-        result = board[7]
-    
-    # Check columns
-    if board[1] != " " and board[1] == board[4] and board[4] == board[7]:
-        result = board[1]
-    if board[2] != " " and board[2] == board[5] and board[5] == board[8]:
-        result = board[2]
-    if board[3] != " " and board[3] == board[6] and board[6] == board[9]:
-        result = board[3]
-    
-    # Check diagonals
-    if board[1] != " " and board[1] == board[5] and board[5] == board[9]:
-        result = board[1]
-    if board[3] != " " and board[3] == board[5] and board[5] == board[7]:
-        result = board[3]
-    
-    # Check for draw
-    for k in range(1, 10):
-        if board[k] != " ":
-            filledCount += 1
-    
-    if result == "None" and filledCount == 9:
-        result = "Draw"
-  
-    return result
+import random
  
+random.seed()  # Prepare random number generator
  
-def displayBoard(board):
-    print(f"\n {board[1]} | {board[2]} | {board[3]} ")
+board = [""] * 10
+ 
+for i in range(1, 9 + 1, 1):
+
+    board[i] = " "
+ 
+gameOver = False
+
+winner = "None"
+
+r = int(random.random() * 2)
+ 
+if r == 0:
+
+    currentPlayer = "O"
+
+else:
+
+    currentPlayer = "X"
+ 
+while gameOver == False:
+
+    print(board[1] + " | " + board[2] + " | " + board[3])
+
     print("---+---+---")
-    print(f" {board[4]} | {board[5]} | {board[6]} ")
+
+    print(board[4] + " | " + board[5] + " | " + board[6])
+
     print("---+---+---")
-    print(f" {board[7]} | {board[8]} | {board[9]} \n")
+
+    print(board[7] + " | " + board[8] + " | " + board[9])
  
- 
-def getComputerMove(board):
-    valid = False
-    while not valid:
-        compMove = random.randint(1, 9)
-        if board[compMove] == " ":
-            valid = True
-    return compMove
- 
- 
-# Main execution block
-if __name__ == "__main__":
-    board = [" "] * 10
-    gameOver = False
-    winner = "None"
-    
-    # Randomly pick who goes first (0 = Human, 1 = Computer)
-    currentPlayer = random.choice(["O", "X"])
-    print(f"Player {currentPlayer} starts the game!")
- 
-    while not gameOver:
-        displayBoard(board)
-       
     if currentPlayer == "O":
-            validMove = False
-            while not validMove:
-                try:
-                    humanMove = int(input("Enter your move (1-9): "))
-                    if 1 <= humanMove <= 9:
-                        if board[humanMove] == " ":
-                            validMove = True
-                        else:
-                            print("Space occupied! Try again.")
-                    else:
-                        print("Invalid choice! Enter a number between 1 and 9.")
-                except ValueError:
-                    print("Invalid input! Please enter an integer.")
-            board[humanMove] = "O"
-        else:
-            print("Computer's turn...")
-            compChoice = getComputerMove(board)
-            board[compChoice] = "X"
-        winner = checkWinner(board)
-        if winner != "None":
-            gameOver = True
-        else:
-            currentPlayer = "X" if currentPlayer == "O" else "O"
- 
-    displayBoard(board)
-    if winner == "O":
-        print("You win!")
-    elif winner == "X":
-        print("Computer wins!")
+
+        validMove = False
+
+        while validMove == False:
+
+            print("Enter your move (1-9): ")
+
+            move = int(input())
+
+            if move >= 1 and move <= 9:
+
+                if board[move] == " ":
+
+                    validMove = True
+
+                else:
+
+                    print("Cell occupied! Try again.")
+
+                    validMove = False
+
+            else:
+
+                print("Invalid position! Please enter a number from 1 to 9.")
+
+                validMove = False
+
     else:
+
+        validMove = False
+
+        print("Computer ('X') is making a move...")
+
+        while validMove == False:
+
+            move = int(random.random() * 9) + 1
+
+            if board[move] == " ":
+
+                validMove = True
+
+            else:
+
+                validMove = False
+ 
+    board[move] = currentPlayer
+ 
+    if (
+
+        (board[1] != " " and board[1] == board[2] and board[2] == board[3])
+
+        or (board[4] != " " and board[4] == board[5] and board[5] == board[6])
+
+        or (board[7] != " " and board[7] == board[8] and board[8] == board[9])
+
+        or (board[1] != " " and board[1] == board[4] and board[4] == board[7])
+
+        or (board[2] != " " and board[2] == board[5] and board[5] == board[8])
+
+        or (board[3] != " " and board[3] == board[6] and board[6] == board[9])
+
+        or (board[1] != " " and board[1] == board[5] and board[5] == board[9])
+
+        or (board[3] != " " and board[3] == board[5] and board[5] == board[7])
+
+    ):
+
+        winner = currentPlayer
+
+        gameOver = True
+
+    else:
+
+        if (
+
+            board[1] != " "
+
+            and board[2] != " "
+
+            and board[3] != " "
+
+            and board[4] != " "
+
+            and board[5] != " "
+
+            and board[6] != " "
+
+            and board[7] != " "
+
+            and board[8] != " "
+
+            and board[9] != " "
+
+        ):
+
+            winner = "Draw"
+
+            gameOver = True
+
+        else:
+
+            if currentPlayer == "O":
+
+                currentPlayer = "X"
+
+            else:
+
+                currentPlayer = "O"
+ 
+print(board[1] + " | " + board[2] + " | " + board[3])
+
+print("---+---+---")
+
+print(board[4] + " | " + board[5] + " | " + board[6])
+
+print("---+---+---")
+
+print(board[7] + " | " + board[8] + " | " + board[9])
+ 
+if winner == "O":
+
+    print("Congratulations! You (O) win!")
+
+else:
+
+    if winner == "X":
+
+        print("Game Over! Computer (X) wins!")
+
+    else:
+
         print("It's a draw!")
+ 
